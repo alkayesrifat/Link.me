@@ -2,6 +2,7 @@
 import { Profile } from "@/components/Profile";
 import { LinkCard } from "@/components/LinkCard";
 import { SocialIcons } from "@/components/SocialIcons";
+import { ThemeToggle } from "@/components/ThemeToggle";
 import { ExternalLink, Github, Youtube, Mail } from "lucide-react";
 
 const links = [
@@ -49,6 +50,7 @@ const socials = [
 const Index = () => {
   return (
     <div className="min-h-screen w-full max-w-2xl mx-auto px-4 py-16">
+      <ThemeToggle />
       <div className="space-y-8">
         <Profile
           image="/placeholder.svg"
