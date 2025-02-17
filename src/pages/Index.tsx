@@ -67,9 +67,9 @@ interface ProfileData {
 }
 
 const defaultProfile: ProfileData = {
-  name: "John Doe",
-  bio: "Frontend Developer & UI Designer | Creating beautiful user experiences",
-  image: "/placeholder.svg"
+  name: "Al Kayes Rifat",
+  bio: "You can Try it out , you can also change everything",
+  image: "https://ugc.production.linktr.ee/d7e5124a-138f-4210-8b42-d9c6760c0ceb_20240901-152552.jpeg"
 };
 
 const Index = () => {
