@@ -1,4 +1,3 @@
-
 import { Profile } from "@/components/Profile";
 import { LinkCard } from "@/components/LinkCard";
 import { SocialIcons } from "@/components/SocialIcons";
@@ -62,6 +61,18 @@ const socials = [
   },
 ];
 
+interface ProfileData {
+  name: string;
+  bio: string;
+  image: string;
+}
+
+const defaultProfile: ProfileData = {
+  name: "John Doe",
+  bio: "Frontend Developer & UI Designer | Creating beautiful user experiences",
+  image: "/placeholder.svg"
+};
+
 const Index = () => {
   const { toast } = useToast();
   const [links, setLinks] = useState(() => {
@@ -69,7 +80,24 @@ const Index = () => {
     return savedLinks ? JSON.parse(savedLinks) : defaultLinks;
   });
   const [editingLink, setEditingLink] = useState<Link | null>(null);
-  
+  const [profile, setProfile] = useState<ProfileData>(() => {
+    const savedProfile = localStorage.getItem("profile");
+    return savedProfile ? JSON.parse(savedProfile) : defaultProfile;
+  });
+  const [editingProfile, setEditingProfile] = useState<ProfileData | null>(null);
+
+  const handleSaveProfile = () => {
+    if (editingProfile) {
+      setProfile(editingProfile);
+      localStorage.setItem("profile", JSON.stringify(editingProfile));
+      setEditingProfile(null);
+      toast({
+        title: "Profile updated",
+        description: "Your profile has been saved successfully.",
+      });
+    }
+  };
+
   const handleSaveLink = (link: Link, index: number) => {
     const newLinks = [...links];
     newLinks[index] = { ...link };
@@ -107,11 +135,65 @@ const Index = () => {
     <div className="min-h-screen w-full max-w-2xl mx-auto px-4 py-16">
       <ThemeToggle />
       <div className="space-y-8">
-        <Profile
-          image="/placeholder.svg"
-          name="John Doe"
-          bio="Frontend Developer & UI Designer | Creating beautiful user experiences"
-        />
+        <Sheet>
+          <SheetTrigger asChild>
+            <div>
+              <Profile
+                image={profile.image}
+                name={profile.name}
+                bio={profile.bio}
+                onEdit={() => setEditingProfile(profile)}
+              />
+            </div>
+          </SheetTrigger>
+          <SheetContent>
+            <SheetHeader>
+              <SheetTitle>Edit Profile</SheetTitle>
+            </SheetHeader>
+            <div className="space-y-4 py-4">
+              <div className="space-y-2">
+                <label className="text-sm font-medium">Profile Image URL</label>
+                <input
+                  type="url"
+                  value={editingProfile?.image || profile.image}
+                  onChange={(e) =>
+                    setEditingProfile({ ...editingProfile!, image: e.target.value })
+                  }
+                  className="w-full p-2 rounded-md border glass"
+                  placeholder="https://example.com/image.jpg"
+                />
+              </div>
+              <div className="space-y-2">
+                <label className="text-sm font-medium">Name</label>
+                <input
+                  type="text"
+                  value={editingProfile?.name || profile.name}
+                  onChange={(e) =>
+                    setEditingProfile({ ...editingProfile!, name: e.target.value })
+                  }
+                  className="w-full p-2 rounded-md border glass"
+                />
+              </div>
+              <div className="space-y-2">
+                <label className="text-sm font-medium">Bio</label>
+                <textarea
+                  value={editingProfile?.bio || profile.bio}
+                  onChange={(e) =>
+                    setEditingProfile({ ...editingProfile!, bio: e.target.value })
+                  }
+                  className="w-full p-2 rounded-md border glass resize-none h-24"
+                />
+              </div>
+              <button
+                onClick={handleSaveProfile}
+                className="w-full px-4 py-2 glass rounded-md flex items-center justify-center space-x-2 mt-4"
+              >
+                <Save className="w-4 h-4" />
+                <span>Save Profile</span>
+              </button>
+            </div>
+          </SheetContent>
+        </Sheet>
         
         <div className="space-y-4 fade-in">
           {links.map((link: Link, index: number) => (
